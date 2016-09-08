@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<vnx_dynamips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xsi:noNamespaceSchemaLocation="/usr/share/xml/vnx/dynamips.xsd"> 
+
+  <global>
+    <sparsemem>true</sparsemem>
+    <ghostios>false</ghostios>
+    <hw>
+       <slot id="0">NM-4E</slot>
+       <slot id="1">NM-4T</slot>
+     </hw>
+  </global>
+
+  <vm name="c3640">
+     <conf>conf/c3640/c3640.conf</conf>
+     <login user="root" password="xxxx"/>
+     <enable password="xxxx"/>
+  </vm>
+
+</vnx_dynamips>

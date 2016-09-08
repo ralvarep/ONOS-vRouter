@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+~~~~~~~~~~~~~~~~~~~~~~~
+|CORD-vRouter Scenario|
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Name:        CORD-vRouter
+
+Description: 
+
+Author:      Raúl Álvarez Pinilla
+-->
+
+<vnx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="/usr/share/xml/vnx/vnx-2.00.xsd">
+  <global>
+    <version>2.0</version>
+    <scenario_name>CORD-vRouter</scenario_name>
+    <automac/>
+    <vm_mgmt type="private" network="10.250.0.0" mask="24" offset="0">
+       <host_mapping />
+    </vm_mgmt>
+    <vm_defaults>
+        <console id="0" display="no"/>
+        <console id="1" display="yes"/>
+    </vm_defaults>
+    <dynamips_ext>CORD-vRouter-dn.xml</dynamips_ext>
+  </global>
+
+  <!-- NET DEFINITION -->
+  <!-- virbr0 (192.168.122.0/24) -->
+  <net name="virbr0" mode="virtual_bridge" managed="no"/>
+  <!-- Lan0 (10.0.0.0/24) -->
+  <net name="Lan0" mode="virtual_bridge"/>
+  <!-- Lan1 (10.0.1.0/24) -->
+  <net name="Lan1" mode="virtual_bridge"/>
+  <!-- Lan2 (10.0.2.0/24) -->
+  <net name="Lan2" mode="virtual_bridge"/>
+  <!-- LanMgmt1 (10.0.11.0/24) -->
+  <net name="LanMgmt1" mode="virtual_bridge"/>
+  <!-- LanMgmt2 (10.0.12.0/24) -->
+  <net name="LanMgmt2" mode="virtual_bridge"/>
+  <!-- LanQuagga -->
+  <net name="LanQuagga" mode="virtual_bridge"/>
+
+  <!-- CLIENT 1 -->
+  <vm name="client-1" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/client/rootfs_lxc_ubuntu64-client</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="Lan1">
+      <ipv4>10.0.1.2/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+  </vm>
+
+  <!-- CLIENT 2 -->
+  <vm name="client-2" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/client/rootfs_lxc_ubuntu64-client</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="Lan2">
+      <ipv4>10.0.2.2/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+  </vm>
+
+  <!-- vROUTER -->
+  <vm name="vRouter" type="lxc" arch="x86_64">
+    <filesystem type="direct">filesystems/vRouter/rootfs_lxc_ubuntu64-vRouter</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="Lan0">
+      <ipv4>10.0.0.2/24</ipv4>
+    </if>
+    <if id="2" net="Lan1">
+      <ipv4>10.0.1.1/24</ipv4>
+    </if>
+    <if id="3" net="LanQuagga"/>
+    <if id="4" net="LanMgmt1">
+      <ipv4>10.0.11.1/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+  </vm>
+
+  <!-- ROUTER CISCO 3640 -->
+  <vm name="c3640" type="dynamips" subtype="3600" os="">
+    <filesystem type="cow">filesystems/c3640/c3640</filesystem>
+    <mem>196M</mem>
+    <if id="0" net="vm_mgmt" name="e0/0"/>
+    <if id="1" net="Lan0" name="e0/1">
+      <ipv4>10.0.0.1/24</ipv4>
+    </if>
+    <if id="2" net="Lan2" name="e0/2">
+      <ipv4>10.0.2.1/24</ipv4>
+    </if>
+  </vm>
+
+  <!-- ONOS -->
+  <vm name="ONOS" type="lxc" arch="x86_64">
+    <filesystem type="direct">filesystems/ONOS/rootfs_lxc_ubuntu64-ONOS</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="LanMgmt1">
+      <ipv4>10.0.11.2/24</ipv4>
+    </if>
+    <if id="2" net="LanMgmt2">
+      <ipv4>10.0.12.2/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+  </vm>
+
+  <!-- Quagga Server -->
+  <vm name="quagga" type="lxc" arch="x86_64">
+    <filesystem type="direct">filesystems/quagga/rootfs_lxc_ubuntu64-quagga</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="LanQuagga"/>
+    <if id="2" net="LanMgmt2">
+      <ipv4>10.0.12.1/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+  </vm>
+
+</vnx>
