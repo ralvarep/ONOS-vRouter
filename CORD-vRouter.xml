@@ -7,7 +7,7 @@
 
 Name:        CORD-vRouter
 
-Description: 
+Description: Virtual scenario of vRouter service (CORD Project)
 
 Author:      Raúl Álvarez Pinilla
 -->
@@ -25,107 +25,178 @@ Author:      Raúl Álvarez Pinilla
         <console id="0" display="no"/>
         <console id="1" display="yes"/>
     </vm_defaults>
-    <dynamips_ext>CORD-vRouter-dn.xml</dynamips_ext>
   </global>
 
   <!-- NET DEFINITION -->
   <!-- virbr0 (192.168.122.0/24) -->
   <net name="virbr0" mode="virtual_bridge" managed="no"/>
-  <!-- Lan0 (10.0.0.0/24) -->
-  <net name="Lan0" mode="virtual_bridge"/>
-  <!-- Lan1 (10.0.1.0/24) -->
-  <net name="Lan1" mode="virtual_bridge"/>
-  <!-- Lan2 (10.0.2.0/24) -->
-  <net name="Lan2" mode="virtual_bridge"/>
-  <!-- LanMgmt1 (10.0.11.0/24) -->
-  <net name="LanMgmt1" mode="virtual_bridge"/>
-  <!-- LanMgmt2 (10.0.12.0/24) -->
-  <net name="LanMgmt2" mode="virtual_bridge"/>
+  <!-- Lan00 (10.0.0.0/24) -->
+  <net name="Lan00" mode="virtual_bridge"/>
+  <!-- Lan11 (10.1.1.0/24) -->
+  <net name="Lan11" mode="virtual_bridge"/>
+  <!-- Lan12 (10.1.2.0/24) -->
+  <net name="Lan12" mode="virtual_bridge"/>
+  <!-- Lan21 (10.2.1.0/24) -->
+  <net name="Lan21" mode="virtual_bridge"/>
+  <!-- LanMgmt11 (10.1.11.0/24) -->
+  <net name="LanMgmt11" mode="virtual_bridge"/>
+  <!-- LanMgmt12 (10.1.12.0/24) -->
+  <net name="LanMgmt12" mode="virtual_bridge"/>
   <!-- LanQuagga -->
   <net name="LanQuagga" mode="virtual_bridge"/>
 
   <!-- CLIENT 1 -->
   <vm name="client-1" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/client/rootfs_lxc_ubuntu64-client</filesystem>
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
-    <if id="1" net="Lan1">
-      <ipv4>10.0.1.2/24</ipv4>
+    <if id="1" net="Lan12">
+      <ipv4>10.1.2.2/24</ipv4>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
+
+    <!-- Configure gateway -->
+    <exec seq="on_boot" type="verbatim">
+        ip route replace default via 10.1.2.1
+    </exec>
   </vm>
 
   <!-- CLIENT 2 -->
   <vm name="client-2" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/client/rootfs_lxc_ubuntu64-client</filesystem>
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
-    <if id="1" net="Lan2">
-      <ipv4>10.0.2.2/24</ipv4>
+    <if id="1" net="Lan21">
+      <ipv4>10.2.1.2/24</ipv4>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
+
+    <!-- Configure gateway -->
+    <exec seq="on_boot" type="verbatim">
+        ip route replace default via 10.2.1.1
+    </exec>
   </vm>
 
   <!-- vROUTER -->
   <vm name="vRouter" type="lxc" arch="x86_64">
-    <filesystem type="direct">filesystems/vRouter/rootfs_lxc_ubuntu64-vRouter</filesystem>
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
-    <if id="1" net="Lan0">
-      <ipv4>10.0.0.2/24</ipv4>
-    </if>
-    <if id="2" net="Lan1">
-      <ipv4>10.0.1.1/24</ipv4>
-    </if>
+    <if id="1" net="Lan00"/> <!-- 10.0.0.1/24 (Configured in ONOS) -->
+    <if id="2" net="Lan11"/> <!-- 10.1.1.1/24 (Configured in ONOS) -->
     <if id="3" net="LanQuagga"/>
-    <if id="4" net="LanMgmt1">
-      <ipv4>10.0.11.1/24</ipv4>
+    <if id="4" net="LanMgmt11">
+      <ipv4>10.1.11.1/24</ipv4>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/vRouter/</filetree>
+
+    <!-- Configure Open vSwitch -->
+    <exec seq="on_boot" type="verbatim">/root/conf/config-ovs.sh</exec>
   </vm>
 
-  <!-- ROUTER CISCO 3640 -->
-  <vm name="c3640" type="dynamips" subtype="3600" os="">
-    <filesystem type="cow">filesystems/c3640/c3640</filesystem>
-    <mem>196M</mem>
-    <if id="0" net="vm_mgmt" name="e0/0"/>
-    <if id="1" net="Lan0" name="e0/1">
-      <ipv4>10.0.0.1/24</ipv4>
+  <!-- ROUTER (INTERNAL) -->
+  <vm name="R-internal" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="Lan11">
+      <ipv4>10.1.1.2/24</ipv4>
     </if>
-    <if id="2" net="Lan2" name="e0/2">
-      <ipv4>10.0.2.1/24</ipv4>
+    <if id="2" net="Lan12">
+      <ipv4>10.1.2.1/24</ipv4>
     </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+
+    <!-- Enable IP forwarding in this node -->
+    <forwarding type="ip" />
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/R-internal/</filetree>
+
+    <!-- Configure gateway -->
+    <exec seq="on_boot" type="verbatim">
+        ip route replace default via 10.1.1.1
+    </exec>
+
+    <!-- Start Quagga Service -->
+    <exec seq="on_boot" type="verbatim" ostype="system">
+        cp /root/conf/*.conf /usr/local/etc/
+        /root/conf/start-quagga.sh
+    </exec>
+  </vm>
+
+  <!-- ROUTER (EXTERNAL) -->
+  <vm name="R-external" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="Lan00">
+      <ipv4>10.0.0.2/24</ipv4>
+    </if>
+    <if id="2" net="Lan21">
+      <ipv4>10.2.1.1/24</ipv4>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+
+    <!-- Enable IP forwarding in this node -->
+    <forwarding type="ip" />
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/R-external/</filetree>
+
+    <!-- Start Quagga Service -->
+    <exec seq="on_boot" type="verbatim" ostype="system">
+        cp /root/conf/*.conf /usr/local/etc/
+        /root/conf/start-quagga.sh
+    </exec>
   </vm>
 
   <!-- ONOS -->
   <vm name="ONOS" type="lxc" arch="x86_64">
-    <filesystem type="direct">filesystems/ONOS/rootfs_lxc_ubuntu64-ONOS</filesystem>
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
-    <if id="1" net="LanMgmt1">
-      <ipv4>10.0.11.2/24</ipv4>
+    <if id="1" net="LanMgmt11">
+      <ipv4>10.1.11.2/24</ipv4>
     </if>
-    <if id="2" net="LanMgmt2">
-      <ipv4>10.0.12.2/24</ipv4>
+    <if id="2" net="LanMgmt12">
+      <ipv4>10.1.12.2/24</ipv4>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/ONOS/</filetree>
   </vm>
 
   <!-- Quagga Server -->
   <vm name="quagga" type="lxc" arch="x86_64">
-    <filesystem type="direct">filesystems/quagga/rootfs_lxc_ubuntu64-quagga</filesystem>
+    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="LanQuagga"/>
-    <if id="2" net="LanMgmt2">
-      <ipv4>10.0.12.1/24</ipv4>
+    <if id="2" net="LanMgmt12">
+      <ipv4>10.1.12.1/24</ipv4>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/quagga/</filetree>
+
+    <!-- Start Quagga Service -->
+    <exec seq="on_boot" type="verbatim" ostype="system">
+        cp /root/conf/*.conf /usr/local/etc/
+        /root/conf/start-quagga.sh
+    </exec>
   </vm>
 
 </vnx>
