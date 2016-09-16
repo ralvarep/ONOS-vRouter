@@ -6,7 +6,7 @@ Demo scenario has been created using [Virtual Networks over linuX (VNX)](http://
 Index:
 - [Requirements](https://github.com/ralvarep/CORD-vRouter#requirements)
 - [Scenario](https://github.com/ralvarep/CORD-vRouter#scenario)
-- [Usage](https://github.com/ralvarep/CORD-vRouterk#usage)
+- [Usage](https://github.com/ralvarep/CORD-vRouter#usage)
 - [Notes](https://github.com/ralvarep/CORD-vRouter#notes)
 - [Author](https://github.com/ralvarep/CORD-vRouter#author)
 - [References](https://github.com/ralvarep/CORD-vRouter#references)
