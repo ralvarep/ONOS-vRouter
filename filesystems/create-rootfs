@@ -8,7 +8,7 @@
 # This file is part of VNX package.
 #
 # Authors: David Fernández (david@dit.upm.es)
-#          Raul Alvarez (raul.alvarez.pinilla@alumnos.upm.es)
+#          Raúl Álvarez (raul.alvarez.pinilla@alumnos.upm.es)
 #
 # Copyright (C) 2015 DIT-UPM
 #           Departamento de Ingenieria de Sistemas Telematicos
@@ -54,9 +54,6 @@ sed -i -e '\$aPATH=\$PATH:~/bin' /root/.bashrc
 # Allow root login by ssh
 sed -i -e 's/^PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-# Install Open vSwitch
-apt-get install openvswitch-switch -y
-
 # Install ONOS
 apt-get install git-core -y
 cd; mkdir Downloads Applications
@@ -98,6 +95,15 @@ groupadd quagga
 useradd -g quagga -G root -s /bin/false quagga
 mkdir /var/log/quagga
 chown quagga:quagga /var/log/quagga
+
+# Install Open vSwitch (2.5.1)
+cd; mkdir openvswitch; cd openvswitch
+wget http://openvswitch.org/releases/openvswitch-2.5.1.tar.gz
+tar -xvf openvswitch-2.5.1.tar.gz
+cd openvswitch-2.5.1
+DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential graphviz autoconf automake debhelper dh-autoreconf libssl-dev libtool python-all python-qt4 python-twisted-conch python-zopeinterface dkms racoon module-assistant python-twisted-web uuid-runtime linux-headers-3.19.0-58-generic
+DEB_BUILD_OPTIONS='nocheck' fakeroot debian/rules binary
+dpkg -i ../*.deb
 
 EOF
 )
