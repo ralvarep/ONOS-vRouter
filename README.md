@@ -37,7 +37,7 @@ The virtual scenario has been configured using the filesystem in [copy-on-write 
 ~~~
 $ filesystems/create-rootfs
 ~~~
-This step takes about 10-20 min. It will download all the necessary packages of the demo scenario.
+This step takes about 20-30 min. It will download all the necessary packages of the demo scenario.
 
 **STEP 3: Create virtual scenario**
 ~~~
