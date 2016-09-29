@@ -69,7 +69,7 @@ echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | 
 apt-get install oracle-java8-installer oracle-java8-set-default -y
 cd; git clone https://gerrit.onosproject.org/onos
 cd onos
-git checkout 1.6.0
+git checkout onos-1.6
 echo '' >> ~/.bashrc
 echo 'export ONOS_ROOT=~/onos' >> ~/.bashrc
 export ONOS_ROOT=~/onos
