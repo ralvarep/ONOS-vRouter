@@ -116,7 +116,7 @@ function customize_rootfs {
   echo "Customizing rootfs..."
   echo "--"
   #echo "$CUSTOMIZESCRIPT"
-  lxc-attach -n MV -- bash -c "$CUSTOMIZESCRIPT"
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- bash -c "$CUSTOMIZESCRIPT" -P $CDIR
 
 }
 
@@ -126,11 +126,12 @@ function customize_rootfs {
 
 function create_new_rootfs {
 
-  # move to the directory where the script is located
-  cd `dirname $0`
-  rm -rf ${ROOTFSNAME}*
-  rm ${ROOTFSLINKNAME}
-  CDIR=$(pwd)
+  if [ -d ${ROOTFSNAME} ]; then
+    rm -rf ${ROOTFSNAME}*
+  fi
+  if [ -L ${ROOTFSLINKNAME} ]; then
+    rm ${ROOTFSLINKNAME}
+  fi
 
   # Download base rootfs
   echo "-----------------------------------------------------------------------"
@@ -155,20 +156,19 @@ function start_and_install_packages {
   echo "Installing packages in rootfs..."
 
   # Install packages in rootfs
-  lxc-start --daemon -n MV -f ${ROOTFSNAME}/config
-  lxc-wait -n MV -s RUNNING
+  lxc-start --daemon -n $ROOTFSNAME -f ${ROOTFSNAME}/config -P $CDIR
+  lxc-wait -n $ROOTFSNAME -s RUNNING -P $CDIR
   sleep 3
-  lxc-attach -n MV -- dhclient eth0
-  lxc-attach -n MV -- ifconfig eth0
-  lxc-attach -n MV -- ping -c 3 www.dit.upm.es
-  lxc-attach -n MV -- apt-get update
-  lxc-attach -n MV -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES"
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- dhclient eth0
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- ifconfig eth0
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- ping -c 3 www.dit.upm.es
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- apt-get update
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y install $PACKAGES"
 
   # Create /dev/net/tun device
-  lxc-attach -n MV -- mkdir /dev/net
-  lxc-attach -n MV -- mknod /dev/net/tun c 10 200
-  lxc-attach -n MV -- chmod 666 /dev/net/tun
-
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- mkdir /dev/net 
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- mknod /dev/net/tun c 10 200 
+  lxc-attach -n $ROOTFSNAME -P $CDIR -- chmod 666 /dev/net/tun 
 }
 
 function create_rootfs_tgz {
@@ -199,10 +199,14 @@ echo "  Rootfs link:  $ROOTFSLINKNAME"
 echo "  Packages to install: $PACKAGES"
 echo "-----------------------------------------------------------------------"
 
+# move to the directory where the script is located
+cd `dirname $0`
+CDIR=$(pwd)
+
 create_new_rootfs
 start_and_install_packages
 customize_rootfs
-lxc-stop -n MV  # Stop the VM
+lxc-stop -n $ROOTFSNAME -P $CDIR # Stop the VM
 create_rootfs_tgz
 
 echo "...done"
