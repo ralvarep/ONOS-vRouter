@@ -47,10 +47,11 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- CLIENT 1 -->
   <vm name="client-1" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan12">
       <ipv4>10.1.2.2/24</ipv4>
+      <ipv6>2001:db8:1:2::2/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
@@ -64,10 +65,11 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- CLIENT 2 -->
   <vm name="client-2" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan21">
       <ipv4>10.2.1.2/24</ipv4>
+      <ipv6>2001:db8:2:1::2/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
@@ -81,13 +83,14 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- vROUTER -->
   <vm name="vRouter" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan00"/> <!-- 10.0.0.1/24 (Configured in ONOS) -->
     <if id="2" net="Lan11"/> <!-- 10.1.1.1/24 (Configured in ONOS) -->
     <if id="3" net="LanQuagga"/>
     <if id="4" net="LanMgmt11">
       <ipv4>10.1.11.1/24</ipv4>
+      <ipv6>2001:db8:1:11::1/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
@@ -102,20 +105,22 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- ROUTER (INTERNAL) -->
   <vm name="R-internal" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan11">
       <ipv4>10.1.1.2/24</ipv4>
+      <ipv6>2001:db8:1:1::2/64</ipv6>
     </if>
     <if id="2" net="Lan12">
       <ipv4>10.1.2.1/24</ipv4>
+      <ipv6>2001:db8:1:2::1/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
 
     <!-- Enable IP forwarding in this node -->
-    <forwarding type="ip" />
+    <forwarding type="ip"/>
 
     <!-- Copy configuration files -->
     <filetree seq="on_boot" root="/root/conf/">conf/R-internal/</filetree>
@@ -126,7 +131,7 @@ Author:      Raúl Álvarez Pinilla
     </exec>
 
     <!-- Start Quagga Service -->
-    <exec seq="on_boot" type="verbatim" ostype="system">
+    <exec seq="on_boot" type="verbatim">
         cp /root/conf/*.conf /usr/local/etc/
         /root/conf/start-quagga.sh
     </exec>
@@ -134,26 +139,28 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- ROUTER (EXTERNAL) -->
   <vm name="R-external" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan00">
       <ipv4>10.0.0.2/24</ipv4>
+      <ipv6>2001:db8::2/64</ipv6>
     </if>
     <if id="2" net="Lan21">
       <ipv4>10.2.1.1/24</ipv4>
+      <ipv6>2001:db8:2:1::1/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
     </if>
 
     <!-- Enable IP forwarding in this node -->
-    <forwarding type="ip" />
+    <forwarding type="ip"/>
 
     <!-- Copy configuration files -->
     <filetree seq="on_boot" root="/root/conf/">conf/R-external/</filetree>
 
     <!-- Start Quagga Service -->
-    <exec seq="on_boot" type="verbatim" ostype="system">
+    <exec seq="on_boot" type="verbatim">
         cp /root/conf/*.conf /usr/local/etc/
         /root/conf/start-quagga.sh
     </exec>
@@ -161,13 +168,15 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- ONOS -->
   <vm name="ONOS" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="LanMgmt11">
       <ipv4>10.1.11.2/24</ipv4>
+      <ipv6>2001:db8:1:11::2/64</ipv6>
     </if>
     <if id="2" net="LanMgmt12">
       <ipv4>10.1.12.2/24</ipv4>
+      <ipv6>2001:db8:1:12::2/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
@@ -175,15 +184,22 @@ Author:      Raúl Álvarez Pinilla
 
     <!-- Copy configuration files -->
     <filetree seq="on_boot" root="/root/conf/">conf/ONOS/</filetree>
+
+    <!-- Configure ONOS -->
+    <exec seq="on_boot" type="verbatim">/root/conf/config-ONOS.sh</exec>
+
+    <!-- Start ONOS -->
+    <exec seq="on_boot" type="verbatim">/root/conf/start-ONOS.sh</exec>
   </vm>
 
   <!-- Quagga Server -->
   <vm name="quagga" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/CORD-vRouter-rootfs/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="LanQuagga"/>
     <if id="2" net="LanMgmt12">
       <ipv4>10.1.12.1/24</ipv4>
+      <ipv6>2001:db8:1:12::1/64</ipv6>
     </if>
     <if id="9" net="virbr0">
       <ipv4>dhcp</ipv4>
@@ -193,7 +209,7 @@ Author:      Raúl Álvarez Pinilla
     <filetree seq="on_boot" root="/root/conf/">conf/quagga/</filetree>
 
     <!-- Start Quagga Service -->
-    <exec seq="on_boot" type="verbatim" ostype="system">
+    <exec seq="on_boot" type="verbatim">
         cp /root/conf/*.conf /usr/local/etc/
         /root/conf/start-quagga.sh
     </exec>
