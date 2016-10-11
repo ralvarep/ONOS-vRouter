@@ -36,7 +36,7 @@
 # Configuration
 #
 NAME=CORD-vRouter
-BASEROOTFSNAME=vnx_rootfs_lxc_ubuntu64-14.04-v025
+BASEROOTFSNAME=vnx_rootfs_lxc_ubuntu64-16.04-v025
 ROOTFSNAME=$BASEROOTFSNAME-$NAME
 ROOTFSLINKNAME="rootfs_lxc_ubuntu64-$NAME"
 
@@ -75,6 +75,7 @@ echo 'export ONOS_ROOT=~/onos' >> ~/.bashrc
 export ONOS_ROOT=~/onos
 echo 'source ~/onos/tools/dev/bash_profile' >> ~/.bashrc
 source ~/onos/tools/dev/bash_profile
+echo 'JAVA_HOME=/usr/lib/jvm/java-8-oracle' >> ~/.bashrc
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 mvn clean install -DskipTests
 
@@ -101,9 +102,10 @@ cd; mkdir openvswitch; cd openvswitch
 wget http://openvswitch.org/releases/openvswitch-2.5.1.tar.gz
 tar -xvf openvswitch-2.5.1.tar.gz
 cd openvswitch-2.5.1
-DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential graphviz autoconf automake debhelper dh-autoreconf libssl-dev libtool python-all python-qt4 python-twisted-conch python-zopeinterface dkms racoon module-assistant python-twisted-web uuid-runtime linux-headers-3.19.0-58-generic
+DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential graphviz autoconf automake debhelper dh-autoreconf libssl-dev libtool python-all python-qt4 python-twisted-conch python-zopeinterface dkms racoon module-assistant python-twisted-web uuid-runtime
 DEB_BUILD_OPTIONS='nocheck' fakeroot debian/rules binary
 dpkg -i ../*.deb
+update-rc.d -f openvswitch-testcontroller remove
 
 EOF
 )
@@ -126,9 +128,8 @@ function create_new_rootfs {
 
   # move to the directory where the script is located
   cd `dirname $0`
-  rm -rf ${NAME}
-  mkdir ${NAME}-rootfs
-  cd ${NAME}-rootfs
+  rm -rf ${ROOTFSNAME}*
+  rm ${ROOTFSLINKNAME}
   CDIR=$(pwd)
 
   # Download base rootfs
