@@ -1,0 +1,38 @@
+{
+    "devices" : {
+        "of:0000000000000001" : {
+            "basic" : {
+                "driver" : "softrouter"
+            }
+        }
+    },
+    "apps" : {
+        "org.onosproject.router" : {
+            "router" : {
+                "controlPlaneConnectPoint" : "of:0000000000000001/3",
+                "ospfEnabled" : "true",
+                "interfaces" : [ "ovs-1", "ovs-2" ]
+            }
+        }
+    },
+    "ports" : {
+        "of:0000000000000001/1" : {
+            "interfaces" : [
+                {
+                    "name" : "ovs-1",
+                    "ips"  : [ "2001:db8::1/64" ],
+                    "mac"  : "00:00:00:00:00:01"
+                }
+            ]
+        },
+        "of:0000000000000001/2" : {
+            "interfaces" : [
+                {
+                    "name" : "ovs-2",
+                    "ips"  : [ "2001:db8:1:1::1/64" ],
+                    "mac"  : "00:00:00:00:00:01"
+                }
+            ]
+        }
+    }
+}
