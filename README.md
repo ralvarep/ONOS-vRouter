@@ -58,6 +58,18 @@ Enter in the ONOS console and execute the following command to check if ONOS is 
 root@ONOS:~# ~/Applications/apache-karaf-3.0.5/bin/status
 Running ...
 ~~~
+To enter in the Karaf Console, execute:
+~~~
+root@ONOS:~# ~/Applications/apache-karaf-3.0.5/bin/client
+Logging in as onos
+Welcome to Open Network Operating System (ONOS)!
+     ____  _  ______  ____     
+    / __ \/ |/ / __ \/ __/   
+   / /_/ /    / /_/ /\ \     
+   \____/_/|_/\____/___/     
+                               
+onos> 
+~~~
 In the event that ONOS is not running, you can launch it by hand executing #ok clean.
 
 Once you are in the Karaf Console, you can check the active applications, such as the vRouter application:
