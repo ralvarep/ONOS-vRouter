@@ -189,7 +189,7 @@ Author:      Raúl Álvarez Pinilla
     <exec seq="on_boot" type="verbatim">/root/conf/config-ONOS.sh</exec>
 
     <!-- Start ONOS -->
-    <exec seq="on_boot" type="verbatim">/root/conf/start-ONOS.sh</exec>
+    <exec seq="on_boot" type="verbatim">nohup /root/conf/start-ONOS.sh</exec>
   </vm>
 
   <!-- Quagga Server -->
