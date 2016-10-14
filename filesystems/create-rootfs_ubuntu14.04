@@ -207,6 +207,7 @@ create_new_rootfs
 start_and_install_packages
 customize_rootfs
 lxc-stop -n $ROOTFSNAME -P $CDIR # Stop the VM
+rm lxc-monitord.log # Delete log of the VM
 create_rootfs_tgz
 
 echo "...done"

@@ -102,7 +102,7 @@ cd; mkdir openvswitch; cd openvswitch
 wget http://openvswitch.org/releases/openvswitch-2.5.1.tar.gz
 tar -xvf openvswitch-2.5.1.tar.gz
 cd openvswitch-2.5.1
-DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential graphviz autoconf automake debhelper dh-autoreconf libssl-dev libtool python-all python-qt4 python-twisted-conch python-zopeinterface dkms racoon module-assistant python-twisted-web uuid-runtime
+DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential graphviz autoconf automake debhelper dh-autoreconf libssl-dev libtool python-all python-qt4 python-twisted-conch python-zopeinterface dkms racoon module-assistant python-twisted-web uuid-runtime linux-headers-4.4.0-38-generic
 DEB_BUILD_OPTIONS='nocheck' fakeroot debian/rules binary
 dpkg -i ../*.deb
 update-rc.d -f openvswitch-testcontroller remove
@@ -207,6 +207,7 @@ create_new_rootfs
 start_and_install_packages
 customize_rootfs
 lxc-stop -n $ROOTFSNAME -P $CDIR # Stop the VM
+rm lxc-monitord.log # Delete log of the VM
 create_rootfs_tgz
 
 echo "...done"
