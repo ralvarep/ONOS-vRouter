@@ -81,6 +81,55 @@ Author:      Raúl Álvarez Pinilla
     </exec>
   </vm>
 
+  <!-- ONOS -->
+  <vm name="ONOS" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="LanMgmt11">
+      <ipv4>10.1.11.2/24</ipv4>
+      <ipv6>2001:db8:1:11::2/64</ipv6>
+    </if>
+    <if id="2" net="LanMgmt12">
+      <ipv4>10.1.12.2/24</ipv4>
+      <ipv6>2001:db8:1:12::2/64</ipv6>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/ONOS/</filetree>
+
+    <!-- Configure ONOS -->
+    <exec seq="on_boot" type="verbatim">/root/conf/config-ONOS.sh</exec>
+
+    <!-- Start ONOS -->
+    <exec seq="on_boot" type="verbatim">nohup /root/conf/start-ONOS.sh</exec>
+  </vm>
+
+  <!-- Quagga Server -->
+  <vm name="quagga" type="lxc" arch="x86_64">
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <mem>2G</mem>
+    <if id="1" net="LanQuagga"/>
+    <if id="2" net="LanMgmt12">
+      <ipv4>10.1.12.1/24</ipv4>
+      <ipv6>2001:db8:1:12::1/64</ipv6>
+    </if>
+    <if id="9" net="virbr0">
+      <ipv4>dhcp</ipv4>
+    </if>
+
+    <!-- Copy configuration files -->
+    <filetree seq="on_boot" root="/root/conf/">conf/quagga/</filetree>
+
+    <!-- Start Quagga Service -->
+    <exec seq="on_boot" type="verbatim">
+        cp /root/conf/*.conf /usr/local/etc/
+        /root/conf/start-quagga.sh
+    </exec>
+  </vm>
+
   <!-- vROUTER -->
   <vm name="vRouter" type="lxc" arch="x86_64">
     <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
@@ -158,55 +207,6 @@ Author:      Raúl Álvarez Pinilla
 
     <!-- Copy configuration files -->
     <filetree seq="on_boot" root="/root/conf/">conf/R-external/</filetree>
-
-    <!-- Start Quagga Service -->
-    <exec seq="on_boot" type="verbatim">
-        cp /root/conf/*.conf /usr/local/etc/
-        /root/conf/start-quagga.sh
-    </exec>
-  </vm>
-
-  <!-- ONOS -->
-  <vm name="ONOS" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
-    <mem>2G</mem>
-    <if id="1" net="LanMgmt11">
-      <ipv4>10.1.11.2/24</ipv4>
-      <ipv6>2001:db8:1:11::2/64</ipv6>
-    </if>
-    <if id="2" net="LanMgmt12">
-      <ipv4>10.1.12.2/24</ipv4>
-      <ipv6>2001:db8:1:12::2/64</ipv6>
-    </if>
-    <if id="9" net="virbr0">
-      <ipv4>dhcp</ipv4>
-    </if>
-
-    <!-- Copy configuration files -->
-    <filetree seq="on_boot" root="/root/conf/">conf/ONOS/</filetree>
-
-    <!-- Configure ONOS -->
-    <exec seq="on_boot" type="verbatim">/root/conf/config-ONOS.sh</exec>
-
-    <!-- Start ONOS -->
-    <exec seq="on_boot" type="verbatim">nohup /root/conf/start-ONOS.sh</exec>
-  </vm>
-
-  <!-- Quagga Server -->
-  <vm name="quagga" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
-    <mem>2G</mem>
-    <if id="1" net="LanQuagga"/>
-    <if id="2" net="LanMgmt12">
-      <ipv4>10.1.12.1/24</ipv4>
-      <ipv6>2001:db8:1:12::1/64</ipv6>
-    </if>
-    <if id="9" net="virbr0">
-      <ipv4>dhcp</ipv4>
-    </if>
-
-    <!-- Copy configuration files -->
-    <filetree seq="on_boot" root="/root/conf/">conf/quagga/</filetree>
 
     <!-- Start Quagga Service -->
     <exec seq="on_boot" type="verbatim">

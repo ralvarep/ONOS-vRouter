@@ -101,7 +101,7 @@ Table: ipv6
 ~~~
 In this step ONOS is launched to manage the OpenFlow switch (vRouter VM) of the topology setting the gateway of the AS 101 and speaking routing protocols with both R-internal (AS 101) and R-external (AS 102).
 
-In addition, ONOS GUI is avaible from your host through [http://10.250.0.22:8181/onos/ui/login.html](http://10.250.0.22:8181/onos/ui/login.html). To login karaf:karaf.
+In addition, ONOS GUI is avaible from your host through [http://10.250.0.10:8181/onos/ui/login.html](http://10.250.0.10:8181/onos/ui/login.html). To login karaf:karaf.
 
 **STEP 4: Connectivity Test between clients (client-1 <==> client-2)**
 
