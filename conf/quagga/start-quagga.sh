@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 5
+
 ifconfig eth1 down
 ifconfig eth1 hw ether 00:00:00:00:00:01
 ip address add 10.0.0.1/24 dev eth1

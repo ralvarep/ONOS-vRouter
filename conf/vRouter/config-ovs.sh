@@ -1,5 +1,14 @@
 #!/bin/bash
 
+echo "Checking Open vSwitch status..."
+while true; do
+      if [ -S /var/run/openvswitch/db.sock ]; then
+         break
+      fi
+      sleep 2
+done
+
+echo "Configuring Open vSwitch..."
 ovs-vsctl add-br ovs
 ovs-vsctl add-port ovs eth1
 ovs-vsctl add-port ovs eth2
