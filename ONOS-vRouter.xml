@@ -2,12 +2,12 @@
 
 <!--
 ~~~~~~~~~~~~~~~~~~~~~~~
-|CORD-vRouter Scenario|
+|ONOS-vRouter Scenario|
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Name:        CORD-vRouter
+Name:        ONOS-vRouter
 
-Description: Virtual scenario of vRouter service (CORD Project)
+Description: Virtual scenario of vRouter service (ONOS/CORD Project)
 
 Author:      Raúl Álvarez Pinilla
 -->
@@ -16,7 +16,7 @@ Author:      Raúl Álvarez Pinilla
   xsi:noNamespaceSchemaLocation="/usr/share/xml/vnx/vnx-2.00.xsd">
   <global>
     <version>2.0</version>
-    <scenario_name>CORD-vRouter</scenario_name>
+    <scenario_name>ONOS-vRouter</scenario_name>
     <automac/>
     <vm_mgmt type="private" network="10.250.0.0" mask="24" offset="0">
        <host_mapping />
@@ -47,7 +47,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- CLIENT 1 -->
   <vm name="client-1" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan12">
       <ipv4>10.1.2.2/24</ipv4>
@@ -65,7 +65,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- CLIENT 2 -->
   <vm name="client-2" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan21">
       <ipv4>10.2.1.2/24</ipv4>
@@ -83,7 +83,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- ONOS -->
   <vm name="ONOS" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="LanMgmt11">
       <ipv4>10.1.11.2/24</ipv4>
@@ -109,7 +109,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- Quagga Server -->
   <vm name="quagga" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="LanQuagga"/>
     <if id="2" net="LanMgmt12">
@@ -132,7 +132,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- vROUTER -->
   <vm name="vRouter" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan00"/> <!-- 10.0.0.1/24 (Configured in ONOS) -->
     <if id="2" net="Lan11"/> <!-- 10.1.1.1/24 (Configured in ONOS) -->
@@ -154,7 +154,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- ROUTER (INTERNAL) -->
   <vm name="R-internal" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan11">
       <ipv4>10.1.1.2/24</ipv4>
@@ -188,7 +188,7 @@ Author:      Raúl Álvarez Pinilla
 
   <!-- ROUTER (EXTERNAL) -->
   <vm name="R-external" type="lxc" arch="x86_64">
-    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-CORD-vRouter</filesystem>
+    <filesystem type="cow">filesystems/rootfs_lxc_ubuntu64-ONOS-vRouter</filesystem>
     <mem>2G</mem>
     <if id="1" net="Lan00">
       <ipv4>10.0.0.2/24</ipv4>

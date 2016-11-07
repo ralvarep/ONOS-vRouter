@@ -1,15 +1,15 @@
-# CORD Project - vRouter
-This repository provides a virtual scenario to explore the vRouter service of the CORD Project.
+# ONOS / CORD Project → vRouter
+This repository provides a virtual scenario to explore the vRouter service of the ONOS / CORD Project.
 
 Demo scenario has been created using [Virtual Networks over linuX (VNX)](http://www.dit.upm.es/~vnx/).
 
 Index:
-- [Requirements](https://github.com/ralvarep/CORD-vRouter#requirements)
-- [Scenario](https://github.com/ralvarep/CORD-vRouter#scenario)
-- [Usage](https://github.com/ralvarep/CORD-vRouter#usage)
-- [Notes](https://github.com/ralvarep/CORD-vRouter#notes)
-- [Author](https://github.com/ralvarep/CORD-vRouter#author)
-- [References](https://github.com/ralvarep/CORD-vRouter#references)
+- [Requirements](https://github.com/ralvarep/ONOS-vRouter#requirements)
+- [Scenario](https://github.com/ralvarep/ONOS-vRouter#scenario)
+- [Usage](https://github.com/ralvarep/ONOS-vRouter#usage)
+- [Notes](https://github.com/ralvarep/ONOS-vRouter#notes)
+- [Author](https://github.com/ralvarep/ONOS-vRouter#author)
+- [References](https://github.com/ralvarep/ONOS-vRouter#references)
 
 
 ## Requirements
@@ -22,14 +22,14 @@ Index:
 
 ## Scenario
 
-![Scenario](https://raw.githubusercontent.com/ralvarep/CORD-vRouter/master/img/scenario.jpg)
+![Scenario](https://raw.githubusercontent.com/ralvarep/ONOS-vRouter/master/img/scenario.jpg)
 
 
 ## Usage
 
 **STEP 1: Clone this repository**
 ~~~
-$ git clone https://github.com/ralvarep/CORD-vRouter.git
+$ git clone https://github.com/ralvarep/ONOS-vRouter.git
 ~~~
 
 **STEP 2: Build filesystem**
@@ -47,7 +47,7 @@ This step takes about 20-30 min. It will download all the necessary packages of 
 
 **STEP 3: Create virtual scenario**
 ~~~
-$ sudo vnx -f CORD-vRouter.xml -t
+$ sudo vnx -f ONOS-vRouter.xml -t
 ~~~
 When the scenario is created, you can login to consoles with root:xxxx.
 
@@ -118,19 +118,19 @@ PING 10.2.1.2 (10.2.1.2) 56(84) bytes of data.
 
 * Launch terminal of some virtual machine
 ~~~
-$ sudo vnx -f CORD-vRouter.xml --console -M VM-NAME
+$ sudo vnx -f ONOS-vRouter.xml --console -M VM-NAME
 ~~~
 * Shutdown scenario
 ~~~
-$ sudo vnx -f CORD-vRouter.xml --shutdown
+$ sudo vnx -f ONOS-vRouter.xml --shutdown
 ~~~
 * Start scenario that has previously been shutdown
 ~~~
-$ sudo vnx -f CORD-vRouter.xml --start
+$ sudo vnx -f ONOS-vRouter.xml --start
 ~~~
 * Destroy scenario
 ~~~
-$ sudo vnx -f CORD-vRouter.xml -P
+$ sudo vnx -f ONOS-vRouter.xml -P
 ~~~
 
 
